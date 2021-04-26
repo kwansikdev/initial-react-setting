@@ -13,12 +13,14 @@ const config: webpack.Configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
-      '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@components': path.resolve(__dirname, 'src/components'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@layouts': path.resolve(__dirname, 'src/layouts'),
+      '@libs': path.resolve(__dirname, 'src/libs'),
+      '@services': path.resolve(__dirname, 'src/services'),
       '@pages': path.resolve(__dirname, 'src/pages'),
-      '@utils': path.resolve(__dirname, 'src/utils'),
       '@typings': path.resolve(__dirname, 'src/typings'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
   },
   entry: {
@@ -41,17 +43,17 @@ const config: webpack.Configuration = {
             '@babel/preset-react',
             '@babel/preset-typescript',
           ],
-          env: {
-            development: {
-              plugins: [
-                ['@emotion', { sourceMap: true }],
-                require.resolve('react-refresh/babel'),
-              ],
-            },
-            production: {
-              plugins: ['@emotion'],
-            },
-          },
+          // env: {
+          //   development: {
+          //     plugins: [
+          //       ['@emotion', { sourceMap: true }],
+          //       require.resolve('react-refresh/babel'),
+          //     ],
+          //   },
+          //   production: {
+          //     plugins: ['@emotion'],
+          //   },
+          // },
         },
         exclude: path.join(__dirname, 'node_modules'),
       },
@@ -64,9 +66,9 @@ const config: webpack.Configuration = {
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       async: false,
-      // eslint: {
-      //   files: "./src/**/*",
-      // },
+      eslint: {
+        files: './src/**/*',
+      },
     }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: isDevelopment ? 'development' : 'production',
@@ -93,13 +95,6 @@ const config: webpack.Configuration = {
 if (isDevelopment && config.plugins) {
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.plugins.push(new ReactRefreshWebpackPlugin());
-  config.plugins.push(
-    new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true }),
-  );
-}
-if (!isDevelopment && config.plugins) {
-  config.plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true }));
-  config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' }));
 }
 
 export default config;
