@@ -2,12 +2,11 @@ import path from 'path';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config: webpack.Configuration = {
-  name: 'sleact',
+  name: 'initial-setting',
   mode: isDevelopment ? 'development' : 'production',
   devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
   resolve: {
@@ -43,17 +42,14 @@ const config: webpack.Configuration = {
             '@babel/preset-react',
             '@babel/preset-typescript',
           ],
-          // env: {
-          //   development: {
-          //     plugins: [
-          //       ['@emotion', { sourceMap: true }],
-          //       require.resolve('react-refresh/babel'),
-          //     ],
-          //   },
-          //   production: {
-          //     plugins: ['@emotion'],
-          //   },
-          // },
+          env: {
+            development: {
+              plugins: [['@emotion', { sourceMap: true }], require.resolve('react-refresh/babel')],
+            },
+            production: {
+              plugins: ['@emotion'],
+            },
+          },
         },
         exclude: path.join(__dirname, 'node_modules'),
       },
@@ -80,15 +76,9 @@ const config: webpack.Configuration = {
     publicPath: '/dist/',
   },
   devServer: {
-    historyApiFallback: true, // react router
+    historyApiFallback: true,
     port: 3000,
     publicPath: '/dist/',
-    proxy: {
-      '/api/': {
-        target: 'http://localhost:3095',
-        changeOrigin: true,
-      },
-    },
   },
 };
 
